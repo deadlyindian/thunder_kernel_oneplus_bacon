@@ -87,3 +87,6 @@ GTAGS
 
 # Generated source files
 smd_rpc_sym.c
+
+# Generated dt image
+arch/arm/boot/dt.img

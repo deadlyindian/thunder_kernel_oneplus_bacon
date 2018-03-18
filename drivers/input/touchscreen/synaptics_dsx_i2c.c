@@ -2719,18 +2719,13 @@ static void synaptics_rmi4_f1a_report(struct synaptics_rmi4_data *rmi4_data,
  * fingers detected.
  */
 static void synaptics_rmi4_report_touch(struct synaptics_rmi4_data *rmi4_data,
-		struct synaptics_rmi4_fn *fhandler, const ktime_t timestamp)
+		struct synaptics_rmi4_fn *fhandler)
 {
 	unsigned char touch_count_2d;
 
 	dev_dbg(&rmi4_data->i2c_client->dev,
 			"%s: Function %02x reporting\n",
 			__func__, fhandler->fn_number);
-
-	input_event(rmi4_data->input_dev, EV_SYN, SYN_TIME_SEC,
-			ktime_to_timespec(timestamp).tv_sec);
-	input_event(rmi4_data->input_dev, EV_SYN, SYN_TIME_NSEC,
-			ktime_to_timespec(timestamp).tv_nsec);
 
 	switch (fhandler->fn_number) {
 		case SYNAPTICS_RMI4_F11:
@@ -2770,7 +2765,7 @@ static void synaptics_rmi4_report_touch(struct synaptics_rmi4_data *rmi4_data,
  * and calls synaptics_rmi4_report_touch() with the appropriate
  * function handler for each function with valid data inputs.
  */
-static void synaptics_rmi4_sensor_report(struct synaptics_rmi4_data *rmi4_data, const ktime_t timestamp)
+static void synaptics_rmi4_sensor_report(struct synaptics_rmi4_data *rmi4_data)
 {
 	int retval;
 	unsigned char data[MAX_INTR_REGISTERS + 1];
@@ -2821,7 +2816,7 @@ static void synaptics_rmi4_sensor_report(struct synaptics_rmi4_data *rmi4_data, 
 				if (fhandler->intr_mask &
 						intr[fhandler->intr_reg_num]) {
 					synaptics_rmi4_report_touch(rmi4_data,
-							fhandler, timestamp);
+							fhandler);
 				}
 			}
 		}
@@ -2858,7 +2853,7 @@ static irqreturn_t synaptics_rmi4_irq(int irq, void *data)
 	ktime_t timestamp = ktime_get();
 
 	if (!rmi4_data->touch_stopped)
-		synaptics_rmi4_sensor_report(rmi4_data, timestamp);
+		synaptics_rmi4_sensor_report(rmi4_data);
 
 	return IRQ_HANDLED;
 }

@@ -169,12 +169,6 @@ config CPU_FREQ_DEFAULT_GOV_BLU_ACTIVE
 	  loading your cpufreq low-level hardware driver, using the
 	  'interactive' governor for latency-sensitive workloads.
 
-config CPU_FREQ_DEFAULT_GOV_DARKNESS
-	bool "darkness"
-	select CPU_FREQ_GOV_DARKNESS
-	help
-	  Use the CPUFreq governor 'darkness' as default.
-
 endchoice
 
 config CPU_FREQ_GOV_PERFORMANCE
@@ -374,15 +368,6 @@ config CPU_FREQ_GOV_UMBRELLA_CORE
 
 	  The governor is based on interactive to provide a resident controller
 	  which interprets unnecessary battery drain as evil.
-
-config CPU_FREQ_GOV_DARKNESS
-	tristate "'darkness' cpufreq policy governor"
-	depends on CPU_FREQ
-	help
-	  'darkness' - This driver is a rather simple implementation of a timer
-	  based governor.
-
-	  If in doubt, say N.
 
 menu "x86 CPU frequency scaling drivers"
 depends on X86

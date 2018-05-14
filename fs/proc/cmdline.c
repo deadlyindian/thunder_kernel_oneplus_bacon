@@ -48,6 +48,8 @@ static void remove_safetynet_flags(char *cmd)
 
 static int __init proc_cmdline_init(void)
 {
+	char *offset_addr;
+
 	strcpy(new_command_line, saved_command_line);
 
 	/*
@@ -55,6 +57,10 @@ static int __init proc_cmdline_init(void)
 	 * pass SafetyNet CTS check.
 	 */
 	remove_safetynet_flags(new_command_line);
+
+	offset_addr = strstr(saved_command_line, "androidboot.mode=reboot");
+	if (offset_addr != NULL)
+		strncpy(offset_addr + 17, "normal", 6);
 
 	proc_create("cmdline", 0, NULL, &cmdline_proc_fops);
 	return 0;
